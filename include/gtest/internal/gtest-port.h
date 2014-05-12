@@ -37,6 +37,14 @@
 // files are expected to #include this.  Therefore, it cannot #include
 // any other Google Test header.
 
+#if defined(_MSC_VER) && _MSC_VER == 1700
+#  ifndef _VARIADIC_MAX
+#    define _VARIADIC_MAX 10
+#  elif _VARIADIC_MAX < 9
+#    define GTEST_HAS_TR1_TUPLE 0
+#  endif
+#endif
+
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PORT_H_
 #define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PORT_H_
 
@@ -504,6 +512,9 @@
 
 // Determines whether Google Test's own tr1 tuple implementation
 // should be used.
+#if defined(_MSC_VER) && _MSC_VER >= 1700
+namespace std { namespace tr1 { using std::tuple; } }
+#endif
 #ifndef GTEST_USE_OWN_TR1_TUPLE
 // The user didn't tell us, so we need to figure it out.
 
